@@ -64,7 +64,7 @@ public aspect VisualisationLexicographicTree {
 	
 	// METHODS ABSTRACT TREENODE A COMPLETER SI BESOIN 
 	
-	public Enumeration<AbstractNode> AbstractNode.getChildren(){
+	public Enumeration<AbstractNode> AbstractNode.children(){
 		Enumeration<AbstractNode> enumerationNode = new Enumeration<AbstractNode>() {
 			
 			@Override
