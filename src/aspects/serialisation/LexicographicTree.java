@@ -2,6 +2,10 @@ package aspects.serialisation;
 
 public class LexicographicTree {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private AbstractNode root;
 
 	public LexicographicTree() {
