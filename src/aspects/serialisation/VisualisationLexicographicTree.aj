@@ -4,9 +4,7 @@ import aspects.serialisation.LexicographicTree;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import java.util.Enumeration;
-
 import javax.swing.JTree;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -32,78 +30,65 @@ public aspect VisualisationLexicographicTree {
 	
 	// METHODS ABSTRACT TREEMODEL A COMPLETER
 	public void LexicographicTree.addTreeModelListener(TreeModelListener l){
-		
+		this.treeModel.addTreeModelListener(l);
 	}
 	
 	public Object LexicographicTree.getChild(Object parent, int index){
-		return parent;
+		return this.treeModel.getChild(parent,index);
 	}
 
 	public int LexicographicTree.getChildCount(Object parent){
-		return 0;
+		return this.treeModel.getChildCount(parent);
 	}
 	
 	public int LexicographicTree.getIndexOfChild(Object parent, Object child){
-		return 0;
+		return this.treeModel.getIndexOfChild(parent, child);
 	}
 	
 	public Object LexicographicTree.getRoot(){
-		return 0;
+		return this.treeModel.getRoot();
 	}
 	
 	public boolean LexicographicTree.isLeaf(Object node){
-		return true;
+		return this.treeModel.isLeaf(node);
 	}
 	
 	public void LexicographicTree.removeTreeModelListener(TreeModelListener l){
-		
+		this.treeModel.removeTreeModelListener(l);
 	}
 	public void LexicographicTree.valueForPathChanged(TreePath path, Object newValue){
-		
+		this.treeModel.valueForPathChanged(path, newValue);
 	}
 	
 	// METHODS ABSTRACT TREENODE A COMPLETER SI BESOIN 
 	
-	public Enumeration<AbstractNode> AbstractNode.children(){
-		Enumeration<AbstractNode> enumerationNode = new Enumeration<AbstractNode>() {
-			
-			@Override
-			public AbstractNode nextElement() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public boolean hasMoreElements() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		};
-		return enumerationNode;
+	@SuppressWarnings("rawtypes")
+	public Enumeration AbstractNode.children(){
+		 return this.mutableTreeNode.children();
 	}
 	
 	public boolean AbstractNode.getAllowsChildren(){
-		return true;
+		return this.mutableTreeNode.getAllowsChildren();
 	}
 	
 	public TreeNode AbstractNode.getChildAt(int childIndex){
-		return this.mutableTreeNode;
+		return this.mutableTreeNode.getChildAt(childIndex);
 	}
 	
 	public int AbstractNode.getChildCount(){
-		return 0;
+		return this.mutableTreeNode.getChildCount();
 	}
 	
 	public int AbstractNode.getIndex(TreeNode node){
-		return 0;
+		return this.mutableTreeNode.getIndex(node);
 	}
 	
 	public TreeNode AbstractNode.getParent(){
-		return this.mutableTreeNode;
+		return this.mutableTreeNode.getParent();
 	}
 	
 	public boolean AbstractNode.isLeaf(){
-		return true;
+		return this.mutableTreeNode.isLeaf();
 	}
 	
 //	TODO Définir l'introduction d'une méthode public void setVue(JTree jt) dans
@@ -121,6 +106,11 @@ public aspect VisualisationLexicographicTree {
 
 // TODO	Définir un pointcut et un advice permettant de rafraîchir le JTree associé à un
 //	ArbreLexicographique après tout changement de structure.
+	
+	// 2 pointcut de base sur frere et fils sur les methodes set, deux context?
+		// enlever ? ajouter?
+		// pour interface graphique sympa, deployer le jtree l'étendre, à trouver
+		// sur le net. Utiliser des ascenseurs
 
 	
 	/**

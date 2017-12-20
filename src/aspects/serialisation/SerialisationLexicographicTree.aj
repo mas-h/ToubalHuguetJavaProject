@@ -34,10 +34,6 @@ public aspect SerialisationLexicographicTree {
 		}
 	}
 
-	// 2 pointcut de base sur frere et fils sur les methodes set, deux context?
-	// enlever ? ajouter?
-	// pour interface graphique sympa, deployer le jtree l'étendre, à trouver
-	// sur le net. Utiliser des ascenseurs
 
 	public static void main(String[] args) {
 		LexicographicTree arbre = new LexicographicTree();
