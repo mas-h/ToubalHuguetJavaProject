@@ -21,6 +21,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextPane;
 
 public class InterfaceLexicographicTree {
 
@@ -63,7 +64,7 @@ public class InterfaceLexicographicTree {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 495, 297);
+		frame.setBounds(100, 100, 859, 576);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JToolBar toolBar = new JToolBar();
@@ -90,12 +91,12 @@ public class InterfaceLexicographicTree {
 							.addContainerGap()
 							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(etatAction, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
-									.addComponent(nbElements, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE))
+									.addComponent(etatAction, GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(nbElements, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE))
 								.addComponent(panel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(separator, GroupLayout.DEFAULT_SIZE, 3, Short.MAX_VALUE)))
+							.addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -122,8 +123,9 @@ public class InterfaceLexicographicTree {
 		JScrollPane scrollPane_Liste = new JScrollPane();
 		panel.addTab("Liste", null, scrollPane_Liste, null);
 		
-		JList list = new JList();
-		scrollPane_Liste.setViewportView(list);
+		JTextPane contenuArbre = new JTextPane();
+		scrollPane_Liste.setViewportView(contenuArbre);
+		
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.addActionListener(new ActionListener() {
@@ -137,6 +139,8 @@ public class InterfaceLexicographicTree {
 				else {
 					etatAction.setText("Le mot : "+ contenu+" n'a pas été ajouté, déjà présent ou erreur de saisie");
 				}
+				contenuArbre.setText(treeLexico.toString());
+				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}
 		});
 		toolBar.add(btnAjouter);
@@ -153,7 +157,8 @@ public class InterfaceLexicographicTree {
 				else {
 					etatAction.setText("Le mot : "+ contenu+" n'a pas été supprimé, non présent ou erreur de saisie");
 				}
-			
+				contenuArbre.setText(treeLexico.toString());
+				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}
 		});
 		toolBar.add(btnSupprimer);
@@ -170,7 +175,8 @@ public class InterfaceLexicographicTree {
 				else {
 					etatAction.setText("Le mot : "+ contenu +" n'est pas présent dans l'arbre");
 				}
-			
+				contenuArbre.setText(treeLexico.toString());
+				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}
 		});
 		toolBar.add(btnChercher);
@@ -187,7 +193,8 @@ public class InterfaceLexicographicTree {
 				else {
 					etatAction.setText("Il n'y a pas de mots commençant par : "+ contenu);
 				}
-			
+				contenuArbre.setText(treeLexico.toString());
+				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}
 		});
 		toolBar.add(btnPrefixe);
@@ -215,7 +222,7 @@ public class InterfaceLexicographicTree {
 					   // nom du fichier  choisi 
 					 String nameFile =  chooser.getSelectedFile().getName();
 					   // chemin absolu du fichier choisi
-					 String pathFile =chooser.getSelectedFile().getAbsolutePath();
+					 String pathFile = chooser.getSelectedFile().getAbsolutePath();
 					 try { // on sauve l'arbre dans le fichier
 						treeLexico.sauve(pathFile);
 					} catch (Exception e1) {
@@ -229,7 +236,7 @@ public class InterfaceLexicographicTree {
 		});
 		mnFichier.add(mntmSauvegarder);
 		
-		JMenuItem mntmCharger = new JMenuItem("Charger");
+		JMenuItem mntmCharger = new JMenuItem("Charger (Ecraser)"); // Création d'un nouvel arbre à partir des éléments contenu dans le fichier choisi 
 		mntmCharger.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int retour =chooser.showOpenDialog(frame);
@@ -238,6 +245,7 @@ public class InterfaceLexicographicTree {
 					 String nameFile =  chooser.getSelectedFile().getName();
 					   // chemin absolu du fichier choisi
 					 String pathFile =chooser.getSelectedFile().getAbsolutePath();
+					 treeLexico = new LexicographicTree();
 					 try { // on charge l'arbre depuis le fichier choisi 
 						treeLexico.charge(pathFile);
 					} catch (Exception e1) {
@@ -247,6 +255,8 @@ public class InterfaceLexicographicTree {
 					etatAction.setText("Arbre ouvert correctement depuis le fichier : "+nameFile);
 				}
 				else { etatAction.setText("Une erreur est survenue");}
+				contenuArbre.setText(treeLexico.toString());
+				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}
 			
 		});
@@ -258,6 +268,32 @@ public class InterfaceLexicographicTree {
 				frame.dispose(); // ferme la fenêtre
 			}
 		});
+		
+		JMenuItem mntmChargermerge = new JMenuItem("Charger (Fusion)"); // Si l'arbre n'est pas vide, cette methode ajoute les éléments du fichier choisi à l'arbre courant
+		mntmChargermerge.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int retour =chooser.showOpenDialog(frame);
+				if (retour == JFileChooser.APPROVE_OPTION){// un fichier a été choisi (sortie par OK)
+					   // nom du fichier  choisi 
+					 String nameFile =  chooser.getSelectedFile().getName();
+					   // chemin absolu du fichier choisi
+					 String pathFile =chooser.getSelectedFile().getAbsolutePath();
+					 
+					 try { // on charge l'arbre depuis le fichier choisi
+						treeLexico.charge(pathFile);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} 
+					etatAction.setText("Arbre ouvert correctement depuis le fichier : "+nameFile);
+				}
+				else { etatAction.setText("Une erreur est survenue");}
+				contenuArbre.setText(treeLexico.toString());
+				nbElements.setText(treeLexico.elementsCount()+" mots");
+			}
+			
+		});
+		mnFichier.add(mntmChargermerge);
 		mnFichier.add(mntmQuitter);
 		
 		JMenu mnAide = new JMenu("Aide");
