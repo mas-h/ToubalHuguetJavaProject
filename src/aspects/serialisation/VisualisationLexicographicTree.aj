@@ -1,16 +1,11 @@
 package aspects.serialisation;
 
-import aspects.serialisation.LexicographicTree;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import java.util.Enumeration;
+
 import javax.swing.JTree;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.*;
 
-import aspects.serialisation.AbstractNode;
 
 public aspect VisualisationLexicographicTree {
 	
@@ -21,74 +16,74 @@ public aspect VisualisationLexicographicTree {
 	declare parents : AbstractNode implements TreeNode;
 	
 	// Introductions de 3 attributs private dans 2 classes
-	private JTree LexicographicTree.vue; // attribut vue de type Jtree dans LexicographicTree
-	private DefaultTreeModel LexicographicTree.treeModel; // attribut treeModel de type TreeModel dans LT
-	private DefaultMutableTreeNode AbstractNode.mutableTreeNode; // attribut mutableTreeNode dans AbstractNode
+	public JTree LexicographicTree.vue; // attribut vue de type Jtree dans LexicographicTree
+	private DefaultTreeModel LexicographicTree.dTreeModel; // attribut treeModel de type TreeModel dans LT
+	private DefaultMutableTreeNode AbstractNode.dMutableTreeNode; // attribut mutableTreeNode dans AbstractNode
 	
 //	TODO Définir les introductions de méthodes nécessaires pour que les interfaces TreeModel et
 //	TreeNode soient correctement implémentées.
 	
 	// METHODS ABSTRACT TREEMODEL A COMPLETER
 	public void LexicographicTree.addTreeModelListener(TreeModelListener l){
-		this.treeModel.addTreeModelListener(l);
+		this.dTreeModel.addTreeModelListener(l);
 	}
 	
 	public Object LexicographicTree.getChild(Object parent, int index){
-		return this.treeModel.getChild(parent,index);
+		return this.dTreeModel.getChild(parent,index);
 	}
 
 	public int LexicographicTree.getChildCount(Object parent){
-		return this.treeModel.getChildCount(parent);
+		return this.dTreeModel.getChildCount(parent);
 	}
 	
 	public int LexicographicTree.getIndexOfChild(Object parent, Object child){
-		return this.treeModel.getIndexOfChild(parent, child);
+		return this.dTreeModel.getIndexOfChild(parent, child);
 	}
 	
 	public Object LexicographicTree.getRoot(){
-		return this.treeModel.getRoot();
+		return this.dTreeModel.getRoot();
 	}
 	
 	public boolean LexicographicTree.isLeaf(Object node){
-		return this.treeModel.isLeaf(node);
+		return this.dTreeModel.isLeaf(node);
 	}
 	
 	public void LexicographicTree.removeTreeModelListener(TreeModelListener l){
-		this.treeModel.removeTreeModelListener(l);
+		this.dTreeModel.removeTreeModelListener(l);
 	}
 	public void LexicographicTree.valueForPathChanged(TreePath path, Object newValue){
-		this.treeModel.valueForPathChanged(path, newValue);
+		this.dTreeModel.valueForPathChanged(path, newValue);
 	}
 	
 	// METHODS ABSTRACT TREENODE A COMPLETER SI BESOIN 
 	
 	@SuppressWarnings("rawtypes")
 	public Enumeration AbstractNode.children(){
-		 return this.mutableTreeNode.children();
+		 return this.dMutableTreeNode.children();
 	}
 	
 	public boolean AbstractNode.getAllowsChildren(){
-		return this.mutableTreeNode.getAllowsChildren();
+		return this.dMutableTreeNode.getAllowsChildren();
 	}
 	
 	public TreeNode AbstractNode.getChildAt(int childIndex){
-		return this.mutableTreeNode.getChildAt(childIndex);
+		return this.dMutableTreeNode.getChildAt(childIndex);
 	}
 	
 	public int AbstractNode.getChildCount(){
-		return this.mutableTreeNode.getChildCount();
+		return this.dMutableTreeNode.getChildCount();
 	}
 	
 	public int AbstractNode.getIndex(TreeNode node){
-		return this.mutableTreeNode.getIndex(node);
+		return this.dMutableTreeNode.getIndex(node);
 	}
 	
 	public TreeNode AbstractNode.getParent(){
-		return this.mutableTreeNode.getParent();
+		return this.dMutableTreeNode.getParent();
 	}
 	
 	public boolean AbstractNode.isLeaf(){
-		return this.mutableTreeNode.isLeaf();
+		return this.dMutableTreeNode.isLeaf();
 	}
 	
 //	TODO Définir l'introduction d'une méthode public void setVue(JTree jt) dans
@@ -103,7 +98,17 @@ public aspect VisualisationLexicographicTree {
 	
 // TODO	Définir des pointcuts et advices de telle sorte que chaque modification de structure dans un
 //	ArbreLexicographique soit prise en compte dans le DefaultTreeModel associé.
-
+	
+	// Pointcut et advice pour liaison d'un arbre lexico avec un defaultTreeModel
+	pointcut LexicographicTreeConstructorExecut() :  execution (LexicographicTree.new()); // à chaque appelle du constructeur de LexicographicTree
+	after (LexicographicTree tree) : LexicographicTreeConstructorExecut() && target(tree)  {
+		System.out.println("Point cut ArbreCréé : un arbre a été créé !");
+		tree.dTreeModel= new DefaultTreeModel(new DefaultMutableTreeNode("racine"));
+		System.out.println("DefaultTreeModel initialisé !");
+		JTree newVue = new JTree(tree.dTreeModel);
+		tree.setVue(newVue);
+		System.out.println("Nouvelle vue définie !");
+	}
 // TODO	Définir un pointcut et un advice permettant de rafraîchir le JTree associé à un
 //	ArbreLexicographique après tout changement de structure.
 	

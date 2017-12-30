@@ -116,7 +116,7 @@ public class InterfaceLexicographicTree {
 		JScrollPane scrollPane_Arbre = new JScrollPane();
 		panel.addTab("Arbre", null, scrollPane_Arbre, null);
 		
-		JTree jTree = new JTree();
+		JTree jTree = treeLexico.vue;// Obligation de mettre l'attribut en public, possibilité de faire un getter.
 		scrollPane_Arbre.setViewportView(jTree);
 		
 		JScrollPane scrollPane_Liste = new JScrollPane();

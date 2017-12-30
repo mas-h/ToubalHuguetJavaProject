@@ -2,6 +2,11 @@ package aspects.serialisation;
 
 public class ImpossibleChangeException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public ImpossibleChangeException() {
 		// TODO Auto-generated constructor stub
 	}
