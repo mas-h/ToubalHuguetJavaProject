@@ -1,5 +1,6 @@
 package aspects.serialisation;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.GroupLayout;
@@ -18,32 +19,36 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
+import java.awt.Toolkit;
+import java.awt.Font;
 
 public class InterfaceLexicographicTree {
 
-	private JFrame frame;
+	private JFrame frmGumGumNo;
 	private JTextField textField;
 	private JTextField etatAction;
 	private JTextField nbElements;
 	private static LexicographicTree treeLexico;
 	private static JFileChooser chooser;
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		
-		 treeLexico = new LexicographicTree();
+		
 		 chooser = new JFileChooser();
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					InterfaceLexicographicTree window = new InterfaceLexicographicTree();
-					window.frame.setVisible(true);
+					window.frmGumGumNo.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -55,16 +60,22 @@ public class InterfaceLexicographicTree {
 	 * Create the application.
 	 */
 	public InterfaceLexicographicTree() {
+		treeLexico = new LexicographicTree();
 		initialize();
+		
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 859, 576);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmGumGumNo = new JFrame();
+		frmGumGumNo.setForeground(new Color(153, 102, 204));
+		frmGumGumNo.setFont(new Font("Ubuntu", Font.BOLD, 16));
+		frmGumGumNo.setTitle("Gum gum no LexicoGraphicTree");
+		frmGumGumNo.setIconImage(Toolkit.getDefaultToolkit().getImage("/home/mash/Workspaces/workspaceJAVA/ToubalHuguetJavaProject/icone.png"));
+		frmGumGumNo.setBounds(100, 100, 859, 576);
+		frmGumGumNo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
@@ -74,13 +85,17 @@ public class InterfaceLexicographicTree {
 		JTabbedPane panel = new JTabbedPane();
 		
 		etatAction = new JTextField();
+		etatAction.setBackground(Color.DARK_GRAY);
+		etatAction.setForeground(Color.BLACK);
 		etatAction.setEditable(false);
 		etatAction.setColumns(10);
 		
 		nbElements = new JTextField();
+		nbElements.setForeground(new Color(0, 153, 255));
+		nbElements.setBackground(Color.DARK_GRAY);
 		nbElements.setEditable(false);
 		nbElements.setColumns(10);
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		GroupLayout groupLayout = new GroupLayout(frmGumGumNo.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -117,25 +132,33 @@ public class InterfaceLexicographicTree {
 		panel.addTab("Arbre", null, scrollPane_Arbre, null);
 		
 		JTree jTree = new JTree();
+		jTree.setForeground(new Color(0, 153, 51));
+		jTree.setFont(new Font("Ubuntu", Font.PLAIN, 14));
+		treeLexico.setVue(jTree);
+		jTree.setModel(treeLexico);
 		scrollPane_Arbre.setViewportView(jTree);
 		
 		JScrollPane scrollPane_Liste = new JScrollPane();
 		panel.addTab("Liste", null, scrollPane_Liste, null);
 		
 		JTextPane contenuArbre = new JTextPane();
+		contenuArbre.setForeground(new Color(102, 102, 153));
+		contenuArbre.setFont(new Font("Ubuntu", Font.BOLD, 16));
 		scrollPane_Liste.setViewportView(contenuArbre);
 		
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String contenu = textField.getText(); // on récupère le contenu du button
-				// on essaye ajoute ce contenu dans l'arbre
+				String contenu = textField.getText().toLowerCase(); // on récupère le contenu du button
+				// on essaye d'ajouter ce contenu dans l'arbre
 				if (treeLexico.add(contenu)){
+					etatAction.setForeground(Color.GREEN);
 					etatAction.setText("Le mot : "+ contenu+" a bien été ajouté");
-					// TODO mettre la JList à jours
+					
 				}
 				else {
+					etatAction.setForeground(Color.RED);
 					etatAction.setText("Le mot : "+ contenu+" n'a pas été ajouté, déjà présent ou erreur de saisie");
 				}
 				contenuArbre.setText(treeLexico.toString());
@@ -147,13 +170,14 @@ public class InterfaceLexicographicTree {
 		JButton btnSupprimer = new JButton("Supprimer");
 		btnSupprimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String contenu = textField.getText(); // on récupère le contenu du button
+				String contenu = textField.getText().toLowerCase(); // on récupère le contenu du button
 				// on essaye d'enlever ce contenu dans l'arbre
 				if (treeLexico.remove(contenu)){
+					etatAction.setForeground(Color.GREEN);
 					etatAction.setText("Le mot : "+ contenu+" a bien été supprimé");
-					// TODO mettre la JList à jours
 				}
 				else {
+					etatAction.setForeground(Color.RED);
 					etatAction.setText("Le mot : "+ contenu+" n'a pas été supprimé, non présent ou erreur de saisie");
 				}
 				contenuArbre.setText(treeLexico.toString());
@@ -165,13 +189,15 @@ public class InterfaceLexicographicTree {
 		JButton btnChercher = new JButton("Chercher");
 		btnChercher.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String contenu = textField.getText(); // on récupère le contenu du button
+				String contenu = textField.getText().toLowerCase(); // on récupère le contenu du button
 				// on regarde si le contenu est dans l'arbre
 				if (treeLexico.contains(contenu)){
+					etatAction.setForeground(Color.GREEN);
 					etatAction.setText("Le mot : "+ contenu +" est bien dans l'arbre");
-					// TODO mettre la JList à jours
+					
 				}
 				else {
+					etatAction.setForeground(Color.RED);
 					etatAction.setText("Le mot : "+ contenu +" n'est pas présent dans l'arbre");
 				}
 				contenuArbre.setText(treeLexico.toString());
@@ -183,13 +209,14 @@ public class InterfaceLexicographicTree {
 		JButton btnPrefixe = new JButton("Prefixe");
 		btnPrefixe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String contenu = textField.getText(); // on récupère le contenu du button
-				// on essaye ajoute ce contenu dans l'arbre
+				String contenu = textField.getText().toLowerCase(); // on récupère le contenu du button
+				// on regarde si ce contenu est un prefix dans l'arbre
 				if (treeLexico.prefix(contenu)){
+					etatAction.setForeground(Color.GREEN);
 					etatAction.setText("Il y a des mots qui commencent par : "+ contenu);
-					// TODO mettre la JList à jours
 				}
 				else {
+					etatAction.setForeground(Color.RED);
 					etatAction.setText("Il n'y a pas de mots commençant par : "+ contenu);
 				}
 				contenuArbre.setText(treeLexico.toString());
@@ -204,10 +231,10 @@ public class InterfaceLexicographicTree {
 		textField = new JTextField();
 		toolBar.add(textField);
 		textField.setColumns(10);
-		frame.getContentPane().setLayout(groupLayout);
+		frmGumGumNo.getContentPane().setLayout(groupLayout);
 		
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+		frmGumGumNo.setJMenuBar(menuBar);
 		
 		JMenu mnFichier = new JMenu("Fichier");
 		menuBar.add(mnFichier);
@@ -216,7 +243,7 @@ public class InterfaceLexicographicTree {
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				int retour =chooser.showSaveDialog(frame);
+				int retour =chooser.showSaveDialog(frmGumGumNo);
 				if (retour == JFileChooser.APPROVE_OPTION){// un fichier a été choisi (sortie par OK)
 					   // nom du fichier  choisi 
 					 String nameFile =  chooser.getSelectedFile().getName();
@@ -227,10 +254,14 @@ public class InterfaceLexicographicTree {
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					} 
+					}
+					etatAction.setSelectedTextColor(Color.GREEN);
 					etatAction.setText("Arbre sauvegardé correctement dans le fichier : "+nameFile);
 				}
-				else { etatAction.setText("Une erreur est survenue");}
+				else {
+					etatAction.setSelectedTextColor(Color.RED);
+					etatAction.setText("Une erreur est survenue");
+					}
 			}
 		});
 		mnFichier.add(mntmSauvegarder);
@@ -238,22 +269,28 @@ public class InterfaceLexicographicTree {
 		JMenuItem mntmCharger = new JMenuItem("Charger (Ecraser)"); // Création d'un nouvel arbre à partir des éléments contenu dans le fichier choisi 
 		mntmCharger.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int retour =chooser.showOpenDialog(frame);
+				int retour =chooser.showOpenDialog(frmGumGumNo);
 				if (retour == JFileChooser.APPROVE_OPTION){// un fichier a été choisi (sortie par OK)
 					   // nom du fichier  choisi 
 					 String nameFile =  chooser.getSelectedFile().getName();
 					   // chemin absolu du fichier choisi
 					 String pathFile =chooser.getSelectedFile().getAbsolutePath();
 					 treeLexico = new LexicographicTree();
+					 treeLexico.setVue(jTree);
+					 jTree.setModel(treeLexico);
 					 try { // on charge l'arbre depuis le fichier choisi 
 						treeLexico.charge(pathFile);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					} 
+					}
+					etatAction.setForeground(Color.GREEN); 
 					etatAction.setText("Arbre ouvert correctement depuis le fichier : "+nameFile);
 				}
-				else { etatAction.setText("Une erreur est survenue");}
+				else {
+					etatAction.setForeground(Color.RED);
+					etatAction.setText("Une erreur est survenue");}
+				
 				contenuArbre.setText(treeLexico.toString());
 				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}
@@ -264,14 +301,14 @@ public class InterfaceLexicographicTree {
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
 		mntmQuitter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose(); // ferme la fenêtre
+				frmGumGumNo.dispose(); // ferme la fenêtre
 			}
 		});
 		
 		JMenuItem mntmChargermerge = new JMenuItem("Charger (Fusion)"); // Si l'arbre n'est pas vide, cette methode ajoute les éléments du fichier choisi à l'arbre courant
 		mntmChargermerge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int retour =chooser.showOpenDialog(frame);
+				int retour =chooser.showOpenDialog(frmGumGumNo);
 				if (retour == JFileChooser.APPROVE_OPTION){// un fichier a été choisi (sortie par OK)
 					   // nom du fichier  choisi 
 					 String nameFile =  chooser.getSelectedFile().getName();
@@ -283,10 +320,14 @@ public class InterfaceLexicographicTree {
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					} 
+					}
+					etatAction.setForeground(Color.GREEN); 
 					etatAction.setText("Arbre ouvert correctement depuis le fichier : "+nameFile);
 				}
-				else { etatAction.setText("Une erreur est survenue");}
+				else {
+					etatAction.setForeground(Color.RED);
+					etatAction.setText("Une erreur est survenue");
+					}
 				contenuArbre.setText(treeLexico.toString());
 				nbElements.setText(treeLexico.elementsCount()+" mots");
 			}

@@ -42,5 +42,8 @@ public class EmptyNode extends AbstractNode {
 	public String toString(String s) {
 		return "";
 	}
+	public static EmptyNode getInstance(){
+		return new EmptyNode();
+	}
 
 }
